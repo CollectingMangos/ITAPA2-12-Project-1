@@ -29,9 +29,9 @@ class BudgetCalculator:
     def add_entry(self,user_code, gross_salary):
         self.user_code = user_code
         self.gross_salary = gross_salary
-        self.calculate_tax()
+        # self.calculate_tax()
         # self.calculate_expenses()
-        # self.net_salary = self.gross_salary - self.tax - self.expenses
+        # self.net_income = self.net_salary - self.tax - self.expenses
     
     def calculate_tax(self):
         taxable_income = self.gross_salary * 12
@@ -47,24 +47,41 @@ class BudgetCalculator:
             taxable_income = taxable_income - 512800
             self.tax = (0.36 * taxable_income) + 121475
         elif taxable_income >= 673001 and taxable_income <= 857900:
+            taxable_income = taxable_income - 673000
             self.tax = (0.39 * taxable_income) + 179147
         elif taxable_income >= 857901 and taxable_income <= 1817000:
+            taxable_income = taxable_income - 857900
             self.tax = (0.41 * taxable_income) + 251258
         elif taxable_income >= 1817001:
+            taxable_income = taxable_income - 1817000
             self.tax = (0.45 * taxable_income) + 644489
     
     def calculate_expenses(self):    
         pass        
     
     def display_budget(self):
-            print("Monthly Budget")
+            print("\nMONTHLY BUDGET")
             print("________________________________________\n")
-            print("Income")
-            print("________________________________________\n")
+            print("INCOME\n")
+            # print("________________________________________\n")
             print(f"Gross Monthly Income (Before Tax): R{self.gross_salary}")
             print("Gross Monthly Income (After Tax): R")
             print("________________________________________\n")
-            print("Expenses")
+            print("TAX PAYABLE")
+            print(f"\nMonthly Tax Payable: R{self.tax/12:.2f}")     
+            print("________________________________________\n")      
+            print("EXPENSES\n")
+            # print("________________________________________\n")
+            print("Utilities: R")
+            print("Rent: R")
+            print("Transportation: R")
+            print("Health: R")
+            print("Groceries: R")
+            print("Communication: R")
+            print("Total Expenses: R")
+            print("________________________________________\n")
+            print("NET INCOME")
+            print(f"Net Income after expenses & tax: R")
             print("________________________________________\n")
             
 
@@ -86,10 +103,7 @@ def main():
             # netSalary = grossSalary - budget.calculate_tax()
             budget.add_entry(user_code, gross_salary)
             budget.calculate_tax()
-            print(f"\nMonthly Tax Payable: R{budget.tax/12}\n")
-            budget.display_budget()
-            
-            
+            budget.display_budget()  
         elif choice == 0:
             print("Cheers!")
             break
