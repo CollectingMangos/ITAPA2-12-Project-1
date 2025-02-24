@@ -3,7 +3,7 @@ class BudgetCalculator:
         self.user_code = None
         self.gross_salary = 0
         self.tax = 0
-        self.expenses = {
+        self.expense_percentages = {
             "Utilities": 0.05,
             "Rent/Housing": 0.15,
             "Transportation": 0.30,
@@ -11,6 +11,7 @@ class BudgetCalculator:
             "Groceries": 0.10,
             "Communication": 0.02
         }
+        self.expense_amounts = {}
         self.net_salary = 0
 
     def add_entry(self, user_code, gross_salary):
@@ -18,7 +19,7 @@ class BudgetCalculator:
         self.gross_salary = gross_salary
         self.calculate_tax()
         self.calculate_expenses()
-        self.net_salary = self.gross_salary - (self.tax / 12) - sum(self.expenses.values())
+        self.net_salary = self.gross_salary - (self.tax / 12) - sum(self.expense_amounts.values())
 
     def calculate_tax(self):
         taxable_income = self.gross_salary * 12
@@ -45,8 +46,8 @@ class BudgetCalculator:
 
     def calculate_expenses(self):
         gross_after_tax = self.gross_salary - (self.tax / 12)
-        for category, percentage in self.expenses.items():
-            self.expenses[category] = gross_after_tax * percentage
+        for category, percentage in self.expense_percentages.items():
+            self.expense_amounts[category] = gross_after_tax * percentage
 
     def display_budget(self):
         print("\nMONTHLY BUDGET")
@@ -60,7 +61,7 @@ class BudgetCalculator:
         print("________________________________________\n")
         print("EXPENSES\n")
         total_expenses = 0
-        for category, amount in self.expenses.items():
+        for category, amount in self.expense_amounts.items():
             print(f"{category}: R{amount:.2f}")
             total_expenses += amount
         print(f"Total Expenses: R{total_expenses:.2f}")
