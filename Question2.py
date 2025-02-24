@@ -1,3 +1,27 @@
+import sqlite3
+
+# connection = sqlite3.connect("store_database.db")
+# cursor = connection.cursor()
+
+class Store:
+    def __init__(self):
+        pass
+    
+    def add_product(self, product_name, product_price, product_quantity):
+        pass
+    
+    def remove_product(self, product_id):
+        pass
+    
+    def update_product(self, product_id, new_product_name, new_product_price, new_product_quantity):
+        pass
+    
+    def display_products(self):
+        pass
+    
+    def sell_product(self, product_id, sale_date, quantity):
+        pass
+
 def main():
     # inventory = InventoryManagement()
 
@@ -19,6 +43,7 @@ def main():
             product_price = float(input("Enter the product's price: "))
             product_quantity = int(input("Enter the product's quantity: "))
             #  method for adding a product goes here
+            # quantity cannot be 0
             print("Product added successfully!")
         elif choice == 2:
             product_id = int(input("Enter the product ID to remove: "))
