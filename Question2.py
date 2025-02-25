@@ -30,11 +30,16 @@ class Store:
         if product_quantity <= 0:
             print("Product quantity must be greater than 0!")
             return
+        self.cursor.execute("SELECT product_name FROM products WHERE product_name = ?", (product_name,))
+        if self.cursor.fetchone():
+            print("Product name already exists! Please use a different name.")
+            return
         self.cursor.execute(
             "INSERT INTO products (product_name, product_price, product_quantity) VALUES (?, ?, ?)",
             (product_name, product_price, product_quantity)
         )
         self.connection.commit()
+        print("Product added successfully!")
     
     def remove_product(self, product_id):
         self.cursor.execute("SELECT product_ID FROM products WHERE product_ID = ?", (product_id,))
@@ -107,17 +112,16 @@ def main():
 
         if choice == 1:
             product_name = input("Enter product name: ")
-            product_price = float(input("Enter the product's price: "))
+            product_price = float(input("Enter the product's price: R"))
             product_quantity = int(input("Enter the product's quantity: "))
             store.add_product(product_name, product_price, product_quantity)
-            print("Product added successfully!")
         elif choice == 2:
             product_id = int(input("Enter the product ID to remove: "))
             store.remove_product(product_id)
         elif choice == 3:
             product_id = int(input("Enter the product ID to update: "))
             new_product_name = input("Enter the new product name: ")
-            new_product_price = float(input("Enter the new product price: "))
+            new_product_price = float(input("Enter the new product price: R"))
             new_product_quantity = int(input("Enter the new product quantity: "))
             store.update_product(product_id, new_product_name, new_product_price, new_product_quantity)
         elif choice == 4:
