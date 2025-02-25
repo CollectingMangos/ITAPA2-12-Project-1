@@ -18,10 +18,12 @@ class Store:
         self.cursor.execute("""
             CREATE TABLE IF NOT EXISTS sales(
                 sales_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                product_ID INTEGER REFERENCES products(product_ID),
                 sale_date TEXT NOT NULL,
+                product_ID INTEGER NOT NULL,
+                product_name TEXT NOT NULL,
                 quantity_sold INTEGER NOT NULL,
-                sale_total REAL NOT NULL
+                sale_total REAL NOT NULL,
+                FOREIGN KEY (product_ID) REFERENCES products(product_ID)
             )
         """)
         self.connection.commit()
@@ -66,15 +68,15 @@ class Store:
         self.cursor.execute("SELECT * FROM products")
         products = self.cursor.fetchall()
         if products:
-            print("\n{:<12} | {:<20} | {:<12} | {:<15}".format("Product ID", "Product Name", "Product Price", "Product Quantity"))
-            print("----------------------------------------------------------------------")
+            print("\n{:<10} | {:<35} | {:<12} | {:<15}".format("Product ID", "Product Name", "Product Price", "Product Quantity"))
+            print("-------------------------------------------------------------------------------------")
             for row in products:
-                print("{:<12} | {:<20} | R{:<12.2f} | {:<15}".format(row[0], row[1], row[2], row[3]))
+                print("{:<10} | {:<35} | R{:<12.2f} | {:<15}".format(row[0], row[1], row[2], row[3]))
         else:
             print("No products available. Please add some products!")
     
-    def sell_product(self, product_id, sale_date, quantity):
-        self.cursor.execute("SELECT product_quantity, product_price FROM products WHERE product_ID = ?", (product_id,))
+    def sell_product(self, sale_date, product_id, quantity):
+        self.cursor.execute("SELECT product_quantity, product_price, product_name FROM products WHERE product_ID = ?", (product_id,))
         result = self.cursor.fetchone()
         if result:
             if result[0] >= quantity:
@@ -82,8 +84,8 @@ class Store:
                 sale_total = result[1] * quantity
                 self.cursor.execute("UPDATE products SET product_quantity = ? WHERE product_ID = ?", (new_quantity, product_id))
                 self.cursor.execute(
-                    "INSERT INTO sales (product_ID, sale_date, quantity_sold, sale_total) VALUES (?, ?, ?, ?)",
-                    (product_id, sale_date, quantity, sale_total)
+                    "INSERT INTO sales (sale_date, product_ID, product_name, quantity_sold, sale_total) VALUES (?, ?, ?, ?, ?)",
+                    (sale_date, product_id, result[2], quantity, sale_total)
                 )
                 self.connection.commit()
                 print("Product sold successfully!")
@@ -130,7 +132,7 @@ def main():
             product_id = int(input("Enter the product ID to sell: "))
             sale_date = input("Enter the sale date with format DD/MM/YYYY: ")
             quantity = int(input("Enter the quantity to sell: "))
-            store.sell_product(product_id, sale_date, quantity)
+            store.sell_product(sale_date, product_id, quantity)
         elif choice == 0:
             print("Cheers!")
             store.close_connection()
